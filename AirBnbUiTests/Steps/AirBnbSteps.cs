@@ -1,11 +1,8 @@
 ﻿using NUnit.Framework;
-using TechTalk.SpecFlow;
-using System.Xml;
-using FrameworkBase;
 using AirBnbUiTests.WebPage;
 using OpenQA.Selenium;
-using FrameworkBase.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Threading;
 
 namespace AirBnbUiTests.Steps
 {
@@ -14,8 +11,6 @@ namespace AirBnbUiTests.Steps
     {
         IWebDriver driver;
         AirBnbPage page;
-        Browser browser;
-        ContainerProvider provider;
 
         [SetUp]
         public void Init()
@@ -23,14 +18,24 @@ namespace AirBnbUiTests.Steps
             driver = new ChromeDriver();
             driver.Manage().Cookies.DeleteAllCookies();
 
-            page = new AirBnbPage(browser, provider, driver);
+            page = new AirBnbPage(driver);
         }
 
         [Test]
-        public void ValidateMessageIsDisplayedWhenUserEntersTextAndClickShowMessage()
+        public void ValidateDestination()
         {
-            
+            page.GoToPage();
+            Thread.Sleep(5000);
+            page.ClickAnywhereButton();
+            page.CheckStaysIsSelected();
+            page.EnterDestination("Spain");
+            page.SelectDestination();
+        }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            driver.Quit();
         }
     }
 }

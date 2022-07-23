@@ -1,22 +1,20 @@
 ﻿namespace AirBnbUiTests.WebPage
 {
     using System;
-    using FrameworkBase.Selenium;
     using OpenQA.Selenium;
-    using OpenQA.Selenium.Support.UI;
     using SeleniumExtras.PageObjects;
 
-    public class AirBnbPage : BaseTablePage
+    public class AirBnbPage 
     {
         #region PageConstructor
         String url = "https://www.airbnb.com/";
 
         private IWebDriver driver;
 
-        public AirBnbPage(Browser browser, ContainerProvider provider, IWebDriver driver)
-        : base(browser, provider)
+        public AirBnbPage(IWebDriver driver)
         {
             this.driver = driver;
+
             PageFactory.InitElements(driver, this);
         }
         #endregion
@@ -28,8 +26,11 @@
         [FindsBy(How = How.Id, Using = "bigsearch-query-location-input")]
         private IWebElement inputWhere;
 
-        [FindsBy(How = How.Id, Using = "bigsearch-query-location-listbox")]
-        private IWebElement ddlWhere;
+        [FindsBy(How = How.Id, Using = "search-block-tab-STAYS")]
+        private IWebElement btnStays;
+
+        [FindsBy(How = How.Id, Using = "bigsearch-query-location-suggestion-0")]
+        private IWebElement firstOption;
         #endregion
 
         #region Actions
@@ -38,12 +39,25 @@
             driver.Navigate().GoToUrl(url);
         }
 
-        public void SelectDestination(string country)
+        public void ClickAnywhereButton()
         {
-            DropDown.SelectItemFromFieldByValue(ddlWhere, country);
+            btnAnywhere.Click();
         }
 
-        public void 
+        public void SelectDestination()
+        {
+            firstOption.Click();
+        }
+
+        public void EnterDestination(string country)
+        {
+            inputWhere.SendKeys(country);
+        }
+
+        public void CheckStaysIsSelected()
+        {
+            btnStays.GetAttribute("aria-selected").Contains("true");
+        }
         #endregion
     }
 }
